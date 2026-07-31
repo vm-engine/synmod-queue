@@ -1,0 +1,83 @@
+{
+    "id": "queue",
+    "id_case": {
+        "snake": "queue",
+        "pascal": "Queue",
+        "slug": "queue",
+        "studly": "queue"
+    },
+    "name": "Queue Management",
+    "description": "Manage the application queue: retry/delete/flush failed jobs, view/delete/clear pending jobs (database driver), and trigger graceful worker restarts.",
+    "version": "0.1.0",
+    "author": "Adods",
+    "email": "theadods@gmail.com",
+    "url_prefix": "queue",
+    "dependencies": {
+        "npm": {
+            "main": {},
+            "dev": {}
+        },
+        "composer": {
+            "main": {},
+            "dev": {}
+        }
+    },
+    "nav": {
+        "backend": {
+            "name": "__queue::menu.be.parent",
+            "position": 20,
+            "class": "",
+            "icon": "fa-solid fa-list-check",
+            "acl": "queue.any",
+            "sub": {
+                "failed": {
+                    "id": "failed",
+                    "name": "__queue::menu.be.failed",
+                    "route": "queue.failed",
+                    "class": "",
+                    "icon": "fa-solid fa-triangle-exclamation",
+                    "acl": "queue.failed"
+                },
+                "pending": {
+                    "id": "pending",
+                    "name": "__queue::menu.be.pending",
+                    "route": "queue.pending",
+                    "class": "",
+                    "icon": "fa-solid fa-hourglass-half",
+                    "acl": "queue.pending"
+                },
+                "worker": {
+                    "id": "worker",
+                    "name": "__queue::menu.be.worker",
+                    "route": "queue.worker",
+                    "class": "",
+                    "icon": "fa-solid fa-power-off",
+                    "acl": "queue.worker"
+                }
+            }
+        }
+    },
+    "acl": {
+        "failed": {
+            "label": "__queue::acl.failed",
+            "create": 0,
+            "read": 1,
+            "update": 1,
+            "delete": 1
+        },
+        "pending": {
+            "label": "__queue::acl.pending",
+            "create": 0,
+            "read": 1,
+            "update": 0,
+            "delete": 1
+        },
+        "worker": {
+            "label": "__queue::acl.worker",
+            "create": 0,
+            "read": 1,
+            "update": 1,
+            "delete": 0
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "name": "vm-engine/synmod-queue",
+    "description": "Queue management module for Laravel Synapse: retry/delete/flush failed jobs, view/delete/clear pending jobs, and trigger worker restarts",
+    "keywords": [
+        "laravel",
+        "synapse",
+        "module",
+        "livewire",
+        "queue",
+        "jobs"
+    ],
+    "type": "synapse-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Achmad Ardiansyah",
+            "email": "theadods@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0|^12.0",
+        "livewire/livewire": "^4.0",
+        "vm-engine/synapse": "^2.1",
+        "vm-engine/synapps-auth": "^2.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VmEngine\\Queue\\": "src/",
+            "VmEngine\\Queue\\Seeders\\": "database/seeders/",
+            "VmEngine\\Queue\\Factories\\": "database/factories/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VmEngine\\Queue\\QueueServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../synapse"
+        },
+        {
+            "type": "path",
+            "url": "../synapps-auth"
+        }
+    ]
+}
