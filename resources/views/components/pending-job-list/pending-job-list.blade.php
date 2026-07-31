@@ -79,44 +79,44 @@
                     </div>
                 </div>
 
-                @if (count($selected) > 0)
-                    <div
-                        class="flex items-center gap-3 border-t border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-800 dark:bg-white/5">
-                        <span
-                            class="text-sm text-gray-600 dark:text-gray-300">{{ __('queue::labels.items_selected', ['count' => count($selected)]) }}</span>
-                        @canAccess('queue.pending.delete')
-                        <button
-                            class="btn danger sm"
-                            type="button"
-                            data-title="{{ __('queue::labels.confirm_delete_pending_selected_title') }}"
-                            data-message="{{ __('queue::labels.confirm_delete_pending_selected_message', ['count' => count($selected)]) }}"
-                            data-confirm="{{ __('queue::labels.confirm_delete_confirm') }}"
-                            data-cancel="{{ __('queue::labels.confirm_delete_cancel') }}"
-                            data-component="{{ $this->getId() }}"
-                            @click="$dispatch('confirm-dialog', {
-                                title: $el.dataset.title,
-                                message: $el.dataset.message,
-                                confirmText: $el.dataset.confirm,
-                                cancelText: $el.dataset.cancel,
-                                confirmColor: 'danger',
-                                icon: 'fa-solid fa-trash',
-                                wireMethod: 'deleteSelected',
-                                wireParams: [],
-                                wireComponent: $el.dataset.component
-                            })"
-                        >
-                            {{ __('queue::labels.delete_selected') }}
-                        </button>
-                        @endcanAccess
-                        <button
-                            class="btn sm"
-                            type="button"
-                            wire:click="clearSelection"
-                        >
-                            {{ __('queue::labels.clear_selection') }}
-                        </button>
-                    </div>
-                @endif
+                <div
+                    class="flex items-center gap-3 border-t border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-800 dark:bg-white/5">
+                    <span
+                        class="text-sm text-gray-600 dark:text-gray-300">{{ __('queue::labels.items_selected', ['count' => count($selected)]) }}</span>
+                    @canAccess('queue.pending.delete')
+                    <button
+                        class="btn danger sm"
+                        type="button"
+                        data-title="{{ __('queue::labels.confirm_delete_pending_selected_title') }}"
+                        data-message="{{ __('queue::labels.confirm_delete_pending_selected_message', ['count' => count($selected)]) }}"
+                        data-confirm="{{ __('queue::labels.confirm_delete_confirm') }}"
+                        data-cancel="{{ __('queue::labels.confirm_delete_cancel') }}"
+                        data-component="{{ $this->getId() }}"
+                        @disabled(count($selected) === 0)
+                        @click="$dispatch('confirm-dialog', {
+                            title: $el.dataset.title,
+                            message: $el.dataset.message,
+                            confirmText: $el.dataset.confirm,
+                            cancelText: $el.dataset.cancel,
+                            confirmColor: 'danger',
+                            icon: 'fa-solid fa-trash',
+                            wireMethod: 'deleteSelected',
+                            wireParams: [],
+                            wireComponent: $el.dataset.component
+                        })"
+                    >
+                        {{ __('queue::labels.delete_selected') }}
+                    </button>
+                    @endcanAccess
+                    <button
+                        class="btn sm"
+                        type="button"
+                        wire:click="clearSelection"
+                        @disabled(count($selected) === 0)
+                    >
+                        {{ __('queue::labels.clear_selection') }}
+                    </button>
+                </div>
 
                 <div class="border-t border-gray-100 dark:border-gray-800">
                     <div class="max-w-full overflow-x-auto">

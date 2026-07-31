@@ -45,7 +45,7 @@ new class extends Component
 
     public function mount(): void
     {
-        synav()->setActiveMenu('backend.queue.failed');
+        synav()->setActiveMenu('queue.failed');
     }
 
     public function title(): string
@@ -102,6 +102,7 @@ new class extends Component
 
         app(FailedJobService::class)->retry($uuid);
 
+        $this->dispatch('synapse-confirmed');
         $this->dispatch('notify', variant: 'success', title: __('queue::labels.actions'), message: __('queue::labels.job_retried'));
 
         unset($this->failedJobs);
@@ -149,6 +150,7 @@ new class extends Component
 
         $this->selected = [];
 
+        $this->dispatch('synapse-confirmed');
         $this->dispatch('notify', variant: 'success', title: __('queue::labels.actions'), message: __('queue::labels.jobs_retried', ['count' => $count]));
 
         unset($this->failedJobs);

@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use VmEngine\Queue\Services\WorkerService;
 use VmEngine\Synapse\Services\Helper\Breadcrumbs;
+use VmEngine\SynAuth\Traits\WithOtpProtection;
 
 new class extends Component
 {
+    use WithOtpProtection;
+
+    private const OTP_PURPOSE = 'queue.restart-workers';
+
     public function mount(): void
     {
-        synav()->setActiveMenu('backend.queue.worker');
+        synav()->setActiveMenu('queue.worker');
     }
 
     public function title(): string
@@ -20,8 +26,39 @@ new class extends Component
         return __('queue::labels.worker_control');
     }
 
+    /**
+     * First step: confirm-dialog callback. Closes the confirm-dialog and
+     * hands off to OTP verification before the restart actually runs.
+     */
     public function restart(): void
     {
+        if (! auth()->user()?->can('queue.worker.update')) {
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.workers_restart_failed'));
+
+            return;
+        }
+
+        $this->dispatch('synapse-confirmed');
+        $this->requireOtp(self::OTP_PURPOSE);
+    }
+
+    /**
+     * Second step: runs only after the user verifies via the OTP modal
+     * dispatched by requireOtp() above.
+     */
+    #[On('otp-verified')]
+    public function handleOtpVerified(string $token, string $purpose): void
+    {
+        if ($purpose !== self::OTP_PURPOSE) {
+            return;
+        }
+
+        if (! $this->validateOtpToken($token)) {
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.otp_invalid'));
+
+            return;
+        }
+
         if (! auth()->user()?->can('queue.worker.update')) {
             $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.workers_restart_failed'));
 
@@ -32,7 +69,6 @@ new class extends Component
 
         unset($this->lastRestartedAt);
 
-        $this->dispatch('synapse-confirmed');
         $this->dispatch('notify', variant: 'success', title: __('queue::labels.actions'), message: __('queue::labels.workers_restarted'));
     }
 

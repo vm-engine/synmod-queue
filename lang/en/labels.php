@@ -94,6 +94,7 @@ return [
     // Notifications: Worker
     'workers_restarted' => 'Restart signal sent to all workers.',
     'workers_restart_failed' => 'Failed to signal worker restart.',
+    'otp_invalid' => 'Invalid or expired verification code. Please try again.',
 
     // Worker Page Copy
     'current_driver' => 'Current Queue Driver',

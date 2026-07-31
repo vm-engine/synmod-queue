@@ -114,6 +114,14 @@ Pending job management only works with the `database` queue driver (Laravel has 
 
 `queue:restart` does not itself kill running workers — it sets a cache timestamp that running `queue:work` processes check between jobs and exit gracefully on. **A process supervisor (Supervisor, systemd, Horizon, etc.) must be configured to auto-relaunch the worker process** after it exits, or the queue will stop processing entirely. The worker-control UI must make this explicit via `labels.supervisor_note`.
 
+### Worker Restart is OTP-Protected
+
+Restarting workers requires the requesting user to re-verify their identity via a one-time code, on top of the `queue.worker.update` ACL check and the confirm-dialog. Implemented via `vm-engine/synapps-auth`'s `VmEngine\SynAuth\Traits\WithOtpProtection` (requires `synapps-auth` ^2.2, when this trait/service was introduced — see its own `CHANGELOG.md`), not a bespoke OTP flow:
+
+- `worker-control.php`'s `restart()` (the confirm-dialog callback) checks ACL, closes the confirm-dialog (`synapse-confirmed`), then calls `$this->requireOtp('queue.restart-workers')` — this dispatches `request-otp-verification`, which `<livewire:synauth-otp-verify-action />` (rendered once on the page, outside modals) listens for and shows its own code-entry modal.
+- `#[On('otp-verified')] handleOtpVerified(string $token, string $purpose)` fires once the user enters a valid code. It checks `$purpose` matches `queue.restart-workers`, calls `$this->validateOtpToken($token)` (single-use, tied to the authenticated user), re-checks ACL defensively, then performs the actual `WorkerService::restart()`.
+- Tests generate a real token directly via `app(OtpProtectionService::class)->generateActionToken($user, 'queue.restart-workers')` and call `handleOtpVerified()` directly — no need to drive the full `OtpVerifyAction` modal component in Feature tests (see `WithOtpProtectionTraitTest.php` in `synapps-auth` for the same convention).
+
 ### Localization
 
 Translation files in `lang/en/`:

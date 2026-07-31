@@ -103,7 +103,8 @@ test('it retries a failed job', function () {
     // executing the job body — no need to fake Artisan here.
     Livewire::test('queue::failed-job-list')
         ->call('retry', $uuid)
-        ->assertDispatched('notify');
+        ->assertDispatched('notify')
+        ->assertDispatched('synapse-confirmed');
 
     // queue:retry removes the row from failed_jobs and pushes it back onto the queue.
     expect(DB::table('failed_jobs')->where('uuid', $uuid)->exists())->toBeFalse();
@@ -132,6 +133,7 @@ test('it bulk retries selected jobs', function () {
         ->set('selected', [$uuid1, $uuid2])
         ->call('retrySelected')
         ->assertDispatched('notify')
+        ->assertDispatched('synapse-confirmed')
         ->assertSet('selected', []);
 
     expect(DB::table('failed_jobs')->whereIn('uuid', [$uuid1, $uuid2])->count())->toBe(0);

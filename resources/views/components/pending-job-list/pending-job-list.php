@@ -48,7 +48,7 @@ new class extends Component
 
     public function mount(): void
     {
-        synav()->setActiveMenu('backend.queue.pending');
+        synav()->setActiveMenu('queue.pending');
     }
 
     public function title(): string

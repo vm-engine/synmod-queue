@@ -5,6 +5,9 @@
     <!-- Confirmation Dialog -->
     <x-synapse-confirm-dialog />
 
+    <!-- OTP verification for the restart action (must sit outside modals to avoid z-index conflicts) -->
+    <livewire:synauth-otp-verify-action />
+
     <div class="space-y-5 sm:space-y-6">
         <div class="dark:bg-white/3 rounded-2xl border border-gray-200 bg-white dark:border-gray-800">
             <div class="px-5 py-4 sm:px-6 sm:py-5">
