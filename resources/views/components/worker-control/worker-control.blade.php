@@ -9,14 +9,8 @@
     <livewire:synauth-otp-verify-action />
 
     <div class="space-y-5 sm:space-y-6">
-        <div class="dark:bg-white/3 rounded-2xl border border-gray-200 bg-white dark:border-gray-800">
-            <div class="px-5 py-4 sm:px-6 sm:py-5">
-                <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
-                    {{ __('queue::labels.worker_control') }}
-                </h3>
-            </div>
-
-            <div class="space-y-4 border-t border-gray-100 px-5 py-4 sm:px-6 sm:py-5 dark:border-gray-800">
+        <x-synapse-panel :title="__('queue::labels.worker_control')">
+            <div class="syn-panel-body space-y-4 px-5 py-4 sm:px-6 sm:py-5">
                 <div class="flex items-center justify-between">
                     <span class="text-sm text-gray-500 dark:text-gray-400">
                         {{ __('queue::labels.current_driver') }}
@@ -40,15 +34,11 @@
                     </span>
                 </div>
 
-                <div
-                    class="flex items-start gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-5 text-blue-800 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200"
-                    role="alert"
-                >
-                    <span class="fa-solid fa-circle-info mt-0.5"></span>
-                    <p class="text-sm">
-                        {{ __('queue::labels.supervisor_note') }}
-                    </p>
-                </div>
+                <x-synapse-alert
+                    type="info"
+                    :message="__('queue::labels.supervisor_note')"
+                    :dismissible="false"
+                />
 
                 @canAccess('queue.worker.update')
                 <div>
@@ -78,6 +68,6 @@
                 </div>
                 @endcanAccess
             </div>
-        </div>
+        </x-synapse-panel>
     </div>
 </div>

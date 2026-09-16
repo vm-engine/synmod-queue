@@ -6,54 +6,42 @@
     <x-synapse-confirm-dialog />
 
     <div class="space-y-5 sm:space-y-6">
-        <div class="dark:bg-white/3 rounded-2xl border border-gray-200 bg-white dark:border-gray-800">
-            <div class="flex justify-between">
-                <div class="px-5 py-4 sm:px-6 sm:py-5">
-                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
-                        {{ __('queue::labels.failed_jobs_list') }}
-                    </h3>
-                </div>
-                <div class="my-auto flex gap-3 px-5">
-                    @canAccess('queue.failed.delete')
-                    <button
-                        class="btn danger"
-                        type="button"
-                        data-title="{{ __('queue::labels.confirm_flush_all_title') }}"
-                        data-message="{{ __('queue::labels.confirm_flush_all_message') }}"
-                        data-confirm="{{ __('queue::labels.confirm_flush_all_confirm') }}"
-                        data-cancel="{{ __('queue::labels.confirm_flush_all_cancel') }}"
-                        data-component="{{ $this->getId() }}"
-                        @click="$dispatch('confirm-dialog', {
-                            title: $el.dataset.title,
-                            message: $el.dataset.message,
-                            confirmText: $el.dataset.confirm,
-                            cancelText: $el.dataset.cancel,
-                            confirmColor: 'danger',
-                            icon: 'fa-solid fa-trash',
-                            wireMethod: 'flushAll',
-                            wireParams: [],
-                            wireComponent: $el.dataset.component
-                        })"
-                    >
-                        <span class="fa-solid fa-trash"></span>
-                        {{ __('queue::labels.flush_all') }}
-                    </button>
-                    @endcanAccess
-                    <div class="input-group">
-                        <input
-                            class="form-input p-2"
-                            id="q"
-                            name="q"
-                            type="text"
-                            placeholder="{{ __('queue::labels.search') }}"
-                            wire:model.live.debounce="q"
-                        >
-                    </div>
-                </div>
-            </div>
+        <x-synapse-panel :title="__('queue::labels.failed_jobs_list')">
+            <x-slot:toolbar>
+                @canAccess('queue.failed.delete')
+                <button
+                    class="btn danger"
+                    type="button"
+                    data-title="{{ __('queue::labels.confirm_flush_all_title') }}"
+                    data-message="{{ __('queue::labels.confirm_flush_all_message') }}"
+                    data-confirm="{{ __('queue::labels.confirm_flush_all_confirm') }}"
+                    data-cancel="{{ __('queue::labels.confirm_flush_all_cancel') }}"
+                    data-component="{{ $this->getId() }}"
+                    @click="$dispatch('confirm-dialog', {
+                        title: $el.dataset.title,
+                        message: $el.dataset.message,
+                        confirmText: $el.dataset.confirm,
+                        cancelText: $el.dataset.cancel,
+                        confirmColor: 'danger',
+                        icon: 'fa-solid fa-trash',
+                        wireMethod: 'flushAll',
+                        wireParams: [],
+                        wireComponent: $el.dataset.component
+                    })"
+                >
+                    <span class="fa-solid fa-trash"></span>
+                    {{ __('queue::labels.flush_all') }}
+                </button>
+                @endcanAccess
+                <x-synapse-search-box
+                    id="q"
+                    name="q"
+                    :placeholder="__('queue::labels.search')"
+                    wire:model.live.debounce="q"
+                />
+            </x-slot:toolbar>
 
-            <div
-                class="flex items-center gap-3 border-t border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-800 dark:bg-white/5">
+            <div class="syn-selection-bar">
                 <span
                     class="text-sm text-gray-600 dark:text-gray-300">{{ __('queue::labels.items_selected', ['count' => count($selected)]) }}</span>
                 @canAccess('queue.failed.update')
@@ -116,7 +104,7 @@
                 </button>
             </div>
 
-            <div class="border-t border-gray-100 dark:border-gray-800">
+            <div class="syn-panel-body">
                 <div class="max-w-full overflow-x-auto">
                     <table
                         class="datatable min-w-full"
@@ -278,10 +266,10 @@
                     </table>
                 </div>
             </div>
-            <div class="flex gap-2 p-3">
+            <div class="syn-per-page-selector">
                 <div class="flex-none p-1">
                     <select
-                        class="shadow-theme-sm rounded-sm p-1"
+                        class="syn-per-page-select"
                         id="limit"
                         name="limit"
                         wire:model.live="limit"
@@ -296,6 +284,6 @@
                     {{ $this->failedJobs->links() }}
                 </div>
             </div>
-        </div>
+        </x-synapse-panel>
     </div>
 </div>

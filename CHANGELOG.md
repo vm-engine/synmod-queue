@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Semantic CSS migration** across all 3 Blade views (`pending-job-list`, `failed-job-list`, `worker-control`) — inline Tailwind utility soup replaced with `vm-engine/synapse`'s `<x-synapse-panel>`, `<x-synapse-alert>`, and `<x-synapse-search-box>` components, plus its `.syn-selection-bar`/`.syn-per-page-selector`/`.syn-per-page-select` semantic classes. No visual redesign, no behavior change — see `.claude/plans/2026-09-16-synmod-queue-semantic-css.md`.
 - Widened `vm-engine/synapse` dependency constraint to `^2.1|^3.0` for Synapse 3.0 compatibility.
 - Raised this package's PHPStan level from 5 to 7.
 
