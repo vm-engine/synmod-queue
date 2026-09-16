@@ -25,7 +25,7 @@ new class extends Component
     public string $sortDirection = 'desc';
 
     #[Url()]
-    public int $limit = 15;
+    public int $perPage = 15;
 
     /** @var array<int, string> */
     public array $selected = [];
@@ -35,7 +35,7 @@ new class extends Component
      */
     protected function rememberedParams(): array
     {
-        return ['q', 'sort', 'sortDirection', 'limit'];
+        return ['q', 'sort', 'sortDirection', 'perPage'];
     }
 
     protected function rememberKey(): string
@@ -211,7 +211,7 @@ new class extends Component
     #[Computed()]
     public function failedJobs()
     {
-        return app(FailedJobService::class)->list($this->q, $this->sort, $this->sortDirection, $this->limit);
+        return app(FailedJobService::class)->list($this->q, $this->sort, $this->sortDirection, $this->perPage);
     }
 
     #[Computed()]

@@ -173,7 +173,7 @@
                                         >
                                     </td>
                                     <td>
-                                        <p>{{ ($this->failedJobs->currentPage() - 1) * $limit + $i }}</p>
+                                        <p>{{ ($this->failedJobs->currentPage() - 1) * $perPage + $i }}</p>
                                     </td>
                                     <td>
                                         <p class="font-mono text-sm">{{ $job->display_name }}</p>
@@ -266,24 +266,7 @@
                     </table>
                 </div>
             </div>
-            <div class="syn-per-page-selector">
-                <div class="flex-none p-1">
-                    <select
-                        class="syn-per-page-select"
-                        id="limit"
-                        name="limit"
-                        wire:model.live="limit"
-                    >
-                        <option value="15">15</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="pagination-container flex-1 grow">
-                    {{ $this->failedJobs->links() }}
-                </div>
-            </div>
+            <x-synapse-per-page-selector :paginator="$this->failedJobs" />
         </x-synapse-panel>
     </div>
 </div>
