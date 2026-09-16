@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Widened `vm-engine/synapse` dependency constraint to `^2.1|^3.0` for Synapse 3.0 compatibility.
+- Raised this package's PHPStan level from 5 to 7.
+
 ## [0.1.0] - 2026-07-31
 
 ### Added
