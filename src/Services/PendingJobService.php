@@ -29,6 +29,8 @@ class PendingJobService
 
     /**
      * List pending (jobs table) records with optional search, queue filter, and sorting.
+     *
+     * @return LengthAwarePaginator<int, \stdClass>
      */
     public function list(?string $search = null, ?string $queueFilter = null, string $sort = 'id', string $sortDirection = 'desc', int $perPage = 15): LengthAwarePaginator
     {
@@ -53,7 +55,7 @@ class PendingJobService
 
         $paginator = $query->orderBy($column, $direction)->paginate($perPage);
 
-        $paginator->getCollection()->transform(function (object $row): object {
+        $paginator->getCollection()->transform(function (\stdClass $row): \stdClass {
             $row->display_name = $this->displayName($row->payload ?? null);
 
             return $row;
@@ -169,12 +171,12 @@ class PendingJobService
      *
      * Skipped when no user context is available.
      */
-    private function log(?int $userId, string $action, string $description, string $feature): void
+    private function log(int|string|null $userId, string $action, string $description, string $feature): void
     {
         if ($userId === null) {
             return;
         }
 
-        SynAuth::logActivity($userId, $action, $description, $feature, 'queue');
+        SynAuth::logActivity((int) $userId, $action, $description, $feature, 'queue');
     }
 }

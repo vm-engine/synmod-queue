@@ -20,6 +20,8 @@ class FailedJobService
 
     /**
      * List failed jobs with optional search and sorting.
+     *
+     * @return LengthAwarePaginator<int, \stdClass>
      */
     public function list(?string $search = null, string $sort = 'failed_at', string $sortDirection = 'desc', int $perPage = 15): LengthAwarePaginator
     {
@@ -38,7 +40,7 @@ class FailedJobService
 
         $paginator = $query->orderBy($column, $direction)->paginate($perPage);
 
-        $paginator->getCollection()->transform(function (object $row): object {
+        $paginator->getCollection()->transform(function (\stdClass $row): \stdClass {
             $row->display_name = $this->displayName($row->payload ?? null);
 
             return $row;
@@ -128,12 +130,12 @@ class FailedJobService
      *
      * Skipped when no user context is available.
      */
-    private function log(?int $userId, string $action, string $description, string $feature): void
+    private function log(int|string|null $userId, string $action, string $description, string $feature): void
     {
         if ($userId === null) {
             return;
         }
 
-        SynAuth::logActivity($userId, $action, $description, $feature, 'queue');
+        SynAuth::logActivity((int) $userId, $action, $description, $feature, 'queue');
     }
 }

@@ -44,12 +44,12 @@ class WorkerService
      *
      * Skipped when no user context is available.
      */
-    private function log(?int $userId, string $action, string $description, string $feature): void
+    private function log(int|string|null $userId, string $action, string $description, string $feature): void
     {
         if ($userId === null) {
             return;
         }
 
-        SynAuth::logActivity($userId, $action, $description, $feature, 'queue');
+        SynAuth::logActivity((int) $userId, $action, $description, $feature, 'queue');
     }
 }
