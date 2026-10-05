@@ -1,6 +1,8 @@
 # Strict Types Plan — synmod-queue
 
-Same pattern as `packages/synapse` (done — see that package's `phpstan.neon`, now level 6, 0 errors, 503 tests green). Not implemented here yet — inventory only.
+> **Status (2026-09-27): done.** Every tracked PHP file declares `strict_types`, and the package's `phpstan.neon` passes level 7 with no ignores and no baseline. Kept for history.
+
+Same pattern as `packages/synapse` (see that package's `phpstan.neon`, now level 7).
 
 ## Scope
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use VmEngine\Queue\QueueServiceProvider;
 
 describe('Queue Module Discovery', function () {

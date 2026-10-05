@@ -209,7 +209,7 @@ Pending job management only works when `config('queue.default')` resolves to the
 
 - Laravel 12
 - Livewire v4
-- vm-engine/synapse ^2.1
+- vm-engine/synapse ^3.0 (views use the per-page selector, semantic CSS classes and the CSP-safe Alpine build)
 - vm-engine/synapps-auth ^2.0
 
 ## License
