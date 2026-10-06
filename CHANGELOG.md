@@ -5,11 +5,16 @@ All notable changes to `vm-engine/synmod-queue` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2026-10-06
+
+**Breaking:**
+- Requires `vm-engine/synapse` ^3.0 and `vm-engine/synapps-auth` ^3.0. Stay on 0.1.x for Synapse 2.x.
+- `FailedJobList`/`PendingJobList`: `$limit` → `$perPage`, including the `?limit=` query-string key — update bookmarks, links and subclasses.
+- Published/overridden views must be re-published (semantic CSS, `<x-synapse-per-page-selector>`).
 
 ### Changed
 - `declare(strict_types=1)` added to the remaining lang, routes and test files — every PHP file in the package is now strict.
-- **Requires `vm-engine/synapse` ^3.0** (was `^2.1|^3.0`) and allows `vm-engine/synapps-auth` ^3.0.
+- **Requires `vm-engine/synapse` ^3.0** (was `^2.1|^3.0`) and `vm-engine/synapps-auth` ^3.0 (was `^2.2`).
 - **PHPStan config trimmed to zero ignores** — dropped the `staticMethod.notFound` ignore; `src/` passes level 7 without it.
 - **Hardened typing to pass PHPStan level 7 clean.** `FailedJobService::list()` and `PendingJobService::list()` now declare `@return LengthAwarePaginator<int, \stdClass>` and their row-transform closures use `\stdClass` explicitly (DB query-builder rows), erasing the "undefined property" noise; the private `log()` helpers in all three services accept `int|string|null` and coerce with `(int)` before calling `SynAuth::logActivity()` (the `auth()->id()` return can be a string id).
 - **Renamed `$limit` to `$perPage` on `FailedJobList`/`PendingJobList`** (including the `#[Url]` query-string key and `rememberedParams()` entry) and adopted `<x-synapse-per-page-selector>` in place of the hand-rolled per-page `<select>`. Page-size options now standardize to the shared component's fixed 10/15/25/50 (was 15/25/50/100 on both pages — "10" is newly available, "100" is gone). **Behavior change:** old bookmarked `?limit=` URLs are silently ignored after this and fall back to the default (15). See `.claude/plans/2026-09-16-per-page-selector-unification.md`.
