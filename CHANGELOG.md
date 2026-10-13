@@ -5,6 +5,12 @@ All notable changes to `vm-engine/synmod-queue` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-10-13
+
+### Added
+- Indonesian (`id`) translations for every language file (`acl`, `labels`, `menu`).
+- `LangParityTest` — fails when an English key has no Indonesian line or the `:placeholders` differ.
+
 ## [0.2.0] - 2026-10-06
 
 **Breaking:**
