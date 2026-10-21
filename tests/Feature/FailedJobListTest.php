@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
+use VmEngine\Queue\Models\FailedJob;
 use VmEngine\SynAuth\Models\Role;
 use VmEngine\SynAuth\Models\RolePermission;
 use VmEngine\SynAuth\Models\User;
@@ -116,11 +117,24 @@ test('it deletes a failed job', function () {
     $this->actingAs($this->fullUser);
 
     Livewire::test('queue::failed-job-list')
-        ->call('delete', $uuid)
+        ->call('delete', (new FailedJob)->generateDeleteToken($uuid))
         ->assertDispatched('notify')
         ->assertDispatched('synapse-confirmed');
 
     expect(DB::table('failed_jobs')->where('uuid', $uuid)->exists())->toBeFalse();
+});
+
+test('it deletes a failed job by delete token only, never by its raw uuid', function () {
+    $uuid = seedFailedJob();
+
+    $this->actingAs($this->fullUser);
+
+    Livewire::test('queue::failed-job-list')
+        ->assertDontSeeHtml('data-uuid="'.$uuid.'" data-title="'.__('queue::labels.confirm_delete_title').'"')
+        ->call('delete', $uuid)
+        ->assertDispatched('notify', variant: 'danger', message: __('queue::labels.invalid_delete_token'));
+
+    expect(DB::table('failed_jobs')->where('uuid', $uuid)->exists())->toBeTrue();
 });
 
 test('it bulk retries selected jobs', function () {
@@ -130,7 +144,8 @@ test('it bulk retries selected jobs', function () {
     $this->actingAs($this->fullUser);
 
     Livewire::test('queue::failed-job-list')
-        ->set('selected', [$uuid1, $uuid2])
+        ->call('select', (new FailedJob)->generateDeleteToken($uuid1))
+        ->call('select', (new FailedJob)->generateDeleteToken($uuid2))
         ->call('retrySelected')
         ->assertDispatched('notify')
         ->assertDispatched('synapse-confirmed')
@@ -146,7 +161,8 @@ test('it bulk deletes selected jobs', function () {
     $this->actingAs($this->fullUser);
 
     Livewire::test('queue::failed-job-list')
-        ->set('selected', [$uuid1, $uuid2])
+        ->call('select', (new FailedJob)->generateDeleteToken($uuid1))
+        ->call('select', (new FailedJob)->generateDeleteToken($uuid2))
         ->call('deleteSelected')
         ->assertDispatched('notify')
         ->assertDispatched('synapse-confirmed')
@@ -187,7 +203,7 @@ test('read only user cannot delete a job', function () {
     $this->actingAs($this->readOnlyUser);
 
     Livewire::test('queue::failed-job-list')
-        ->call('delete', $uuid)
+        ->call('delete', (new FailedJob)->generateDeleteToken($uuid))
         ->assertDispatched('notify');
 
     expect(DB::table('failed_jobs')->where('uuid', $uuid)->exists())->toBeTrue();

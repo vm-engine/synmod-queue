@@ -45,6 +45,8 @@ This is the **Queue Management Module** (`vm-engine/synmod-queue`), a **package 
 
 Unlike most Synapse modules, this module has **no migrations**. It reads and writes directly to Laravel's built-in `failed_jobs` table and (for the database queue driver only) the `jobs` table. There are no Eloquent models of its own for these — they are managed through service classes that wrap Laravel's `queue:*` artisan commands (`queue:retry`, `queue:forget`, `queue:flush`, `queue:clear`, `queue:restart`).
 
+The only models, `Models\PendingJob` and `Models\FailedJob`, exist to issue and validate `WithDeleteToken` delete tokens (single-row deletes never send a raw id/uuid to the browser). Services stamp `delete_token` on each listed row; reading and deleting still go through the query builder / `queue:forget`.
+
 ### Namespace Structure
 
 This is a **package module** that uses the **VmEngine vendor namespace** (not SynApps):

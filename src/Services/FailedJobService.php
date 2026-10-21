@@ -7,6 +7,7 @@ namespace VmEngine\Queue\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use VmEngine\Queue\Models\FailedJob;
 use VmEngine\SynAuth\Facades\SynAuth;
 
 class FailedJobService
@@ -40,8 +41,11 @@ class FailedJobService
 
         $paginator = $query->orderBy($column, $direction)->paginate($perPage);
 
-        $paginator->getCollection()->transform(function (\stdClass $row): \stdClass {
+        $tokens = new FailedJob;
+
+        $paginator->getCollection()->transform(function (\stdClass $row) use ($tokens): \stdClass {
             $row->display_name = $this->displayName($row->payload ?? null);
+            $row->delete_token = $tokens->generateDeleteToken($row->uuid);
 
             return $row;
         });

@@ -81,6 +81,7 @@ return [
     'job_retry_failed' => 'Gagal mencoba lagi job.',
     'jobs_retried' => ':count job dimasukkan ke antrean untuk dicoba lagi.',
     'job_deleted' => 'Job gagal dihapus.',
+    'invalid_delete_token' => 'Token hapus tidak valid. Silakan muat ulang halaman.',
     'job_delete_failed' => 'Gagal menghapus job.',
     'jobs_deleted' => ':count job dihapus.',
     'jobs_flushed' => 'Semua job gagal telah dihapus.',

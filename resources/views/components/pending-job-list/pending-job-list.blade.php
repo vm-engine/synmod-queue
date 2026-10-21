@@ -179,7 +179,7 @@
                                         <td>
                                             <input
                                                 type="checkbox"
-                                                wire:click="select({{ $job->id }})"
+                                                wire:click="select('{{ $job->delete_token }}')"
                                                 @checked(in_array($job->id, $selected, true))
                                             >
                                         </td>
@@ -221,7 +221,7 @@
                                                         confirmColor: 'danger',
                                                         icon: 'fa-solid fa-trash',
                                                         wireMethod: 'delete',
-                                                        wireParams: [{{ $job->id }}],
+                                                        wireParams: ['{{ $job->delete_token }}'],
                                                         wireComponent: $el.dataset.component
                                                     })"
                                                 >

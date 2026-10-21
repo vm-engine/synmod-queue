@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
+use VmEngine\Queue\Models\PendingJob;
 use VmEngine\Queue\Services\PendingJobService;
 use VmEngine\SynAuth\Models\Role;
 use VmEngine\SynAuth\Models\RolePermission;
@@ -109,11 +110,40 @@ test('it deletes a pending job', function () {
     $this->actingAs($this->fullUser);
 
     Livewire::test('queue::pending-job-list')
-        ->call('delete', $id)
+        ->call('delete', (new PendingJob)->generateDeleteToken($id))
         ->assertDispatched('notify')
         ->assertDispatched('synapse-confirmed');
 
     expect(DB::table('jobs')->where('id', $id)->exists())->toBeFalse();
+});
+
+test('it deletes a pending job by delete token only, never by a raw id', function () {
+    $id = seedPendingJob();
+
+    $this->actingAs($this->fullUser);
+
+    Livewire::test('queue::pending-job-list')
+        ->assertDontSeeHtml('wireParams: ['.$id.']')
+        ->call('delete', (string) $id)
+        ->assertDispatched('notify', variant: 'danger', message: __('queue::labels.invalid_delete_token'));
+
+    expect(DB::table('jobs')->where('id', $id)->exists())->toBeTrue();
+});
+
+test('it selects pending jobs by delete token only, and the selection cannot be set directly', function () {
+    $id = seedPendingJob();
+
+    $this->actingAs($this->fullUser);
+
+    $component = Livewire::test('queue::pending-job-list')
+        ->assertDontSeeHtml('select('.$id.')')
+        ->call('select', (string) $id)
+        ->assertDispatched('notify', variant: 'danger', message: __('queue::labels.invalid_delete_token'))
+        ->assertSet('selected', [])
+        ->call('select', (new PendingJob)->generateDeleteToken($id))
+        ->assertSet('selected', [$id]);
+
+    expect(fn () => $component->set('selected', [999]))->toThrow(Exception::class);
 });
 
 test('it bulk deletes selected pending jobs', function () {
@@ -123,7 +153,8 @@ test('it bulk deletes selected pending jobs', function () {
     $this->actingAs($this->fullUser);
 
     Livewire::test('queue::pending-job-list')
-        ->set('selected', [$id1, $id2])
+        ->call('select', (new PendingJob)->generateDeleteToken($id1))
+        ->call('select', (new PendingJob)->generateDeleteToken($id2))
         ->call('deleteSelected')
         ->assertDispatched('notify')
         ->assertDispatched('synapse-confirmed')
@@ -153,7 +184,7 @@ test('read only user cannot delete a pending job', function () {
     $this->actingAs($this->readOnlyUser);
 
     Livewire::test('queue::pending-job-list')
-        ->call('delete', $id)
+        ->call('delete', (new PendingJob)->generateDeleteToken($id))
         ->assertDispatched('notify');
 
     expect(DB::table('jobs')->where('id', $id)->exists())->toBeTrue();

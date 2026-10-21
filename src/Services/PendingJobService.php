@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
+use VmEngine\Queue\Models\PendingJob;
 use VmEngine\SynAuth\Facades\SynAuth;
 
 class PendingJobService
@@ -55,8 +56,11 @@ class PendingJobService
 
         $paginator = $query->orderBy($column, $direction)->paginate($perPage);
 
-        $paginator->getCollection()->transform(function (\stdClass $row): \stdClass {
+        $tokens = new PendingJob;
+
+        $paginator->getCollection()->transform(function (\stdClass $row) use ($tokens): \stdClass {
             $row->display_name = $this->displayName($row->payload ?? null);
+            $row->delete_token = $tokens->generateDeleteToken($row->id);
 
             return $row;
         });

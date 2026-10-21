@@ -81,6 +81,7 @@ return [
     'job_retry_failed' => 'Failed to retry job.',
     'jobs_retried' => ':count job(s) queued for retry.',
     'job_deleted' => 'Failed job deleted.',
+    'invalid_delete_token' => 'Invalid delete token. Please refresh the page.',
     'job_delete_failed' => 'Failed to delete job.',
     'jobs_deleted' => ':count job(s) deleted.',
     'jobs_flushed' => 'All failed jobs have been flushed.',

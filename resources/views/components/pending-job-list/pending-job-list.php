@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use VmEngine\Queue\Models\PendingJob;
 use VmEngine\Queue\Services\PendingJobService;
 use VmEngine\Synapse\Services\Helper\Breadcrumbs;
 use VmEngine\Synapse\Traits\RemembersQueryParams;
@@ -31,6 +33,7 @@ new class extends Component
     public int $perPage = 15;
 
     /** @var array<int, int> */
+    #[Locked]
     public array $selected = [];
 
     /**
@@ -76,8 +79,21 @@ new class extends Component
         $this->sort = $sort;
     }
 
-    public function select(int $id): void
+    /**
+     * Toggle a row in the (server-held, locked) selection by its delete token; a raw id is refused.
+     */
+    public function select(string $token): void
     {
+        $id = PendingJob::validateDeleteToken($token);
+
+        if ($id === false) {
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.invalid_delete_token'));
+
+            return;
+        }
+
+        $id = (int) $id;
+
         if (in_array($id, $this->selected, true)) {
             $this->selected = array_values(array_diff($this->selected, [$id]));
         } else {
@@ -99,7 +115,7 @@ new class extends Component
         $this->selected = [];
     }
 
-    public function delete(int $id): void
+    public function delete(string $token): void
     {
         if (! auth()->user()?->can('queue.pending.delete')) {
             $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.pending_job_delete_failed'));
@@ -107,6 +123,16 @@ new class extends Component
             return;
         }
 
+        $id = PendingJob::validateDeleteToken($token);
+
+        if ($id === false) {
+            $this->dispatch('synapse-confirmed');
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.invalid_delete_token'));
+
+            return;
+        }
+
+        $id = (int) $id;
         app(PendingJobService::class)->delete($id);
 
         $this->selected = array_values(array_diff($this->selected, [$id]));

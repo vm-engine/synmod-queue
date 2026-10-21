@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use VmEngine\Queue\Models\FailedJob;
 use VmEngine\Queue\Services\FailedJobService;
 use VmEngine\Synapse\Services\Helper\Breadcrumbs;
 use VmEngine\Synapse\Traits\RemembersQueryParams;
@@ -28,6 +30,7 @@ new class extends Component
     public int $perPage = 15;
 
     /** @var array<int, string> */
+    #[Locked]
     public array $selected = [];
 
     /**
@@ -73,8 +76,21 @@ new class extends Component
         $this->sort = $sort;
     }
 
-    public function select(string $uuid): void
+    /**
+     * Toggle a row in the (server-held, locked) selection by its delete token; a raw uuid is refused.
+     */
+    public function select(string $token): void
     {
+        $uuid = FailedJob::validateDeleteToken($token);
+
+        if ($uuid === false) {
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.invalid_delete_token'));
+
+            return;
+        }
+
+        $uuid = $uuid;
+
         if (in_array($uuid, $this->selected, true)) {
             $this->selected = array_values(array_diff($this->selected, [$uuid]));
         } else {
@@ -108,10 +124,19 @@ new class extends Component
         unset($this->failedJobs);
     }
 
-    public function delete(string $uuid): void
+    public function delete(string $token): void
     {
         if (! auth()->user()?->can('queue.failed.delete')) {
             $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.job_delete_failed'));
+
+            return;
+        }
+
+        $uuid = FailedJob::validateDeleteToken($token);
+
+        if ($uuid === false) {
+            $this->dispatch('synapse-confirmed');
+            $this->dispatch('notify', variant: 'danger', title: __('queue::labels.actions'), message: __('queue::labels.invalid_delete_token'));
 
             return;
         }

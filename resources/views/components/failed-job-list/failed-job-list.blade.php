@@ -168,7 +168,7 @@
                                     <td>
                                         <input
                                             type="checkbox"
-                                            wire:click="select('{{ $job->uuid }}')"
+                                            wire:click="select('{{ $job->delete_token }}')"
                                             @checked(in_array($job->uuid, $selected, true))
                                         >
                                     </td>
@@ -227,7 +227,7 @@
                                             <button
                                                 class="btn-icon danger has-tooltip group"
                                                 type="button"
-                                                data-uuid="{{ $job->uuid }}"
+                                                data-token="{{ $job->delete_token }}"
                                                 data-title="{{ __('queue::labels.confirm_delete_title') }}"
                                                 data-message="{{ __('queue::labels.confirm_delete_message', ['name' => $job->display_name]) }}"
                                                 data-confirm="{{ __('queue::labels.confirm_delete_confirm') }}"
@@ -241,7 +241,7 @@
                                                     confirmColor: 'danger',
                                                     icon: 'fa-solid fa-trash',
                                                     wireMethod: 'delete',
-                                                    wireParams: [$el.dataset.uuid],
+                                                    wireParams: [$el.dataset.token],
                                                     wireComponent: $el.dataset.component
                                                 })"
                                             >
