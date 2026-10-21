@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-21
+
 ### Security
 - Single pending/failed job deletes no longer send the raw job id or uuid: rows carry a `WithDeleteToken` delete token (new token-only models `PendingJob` / `FailedJob`), `delete()` takes that token, and a raw id/uuid is refused.
 - Bulk selection no longer takes raw ids/uuids: row checkboxes call `select()` with the row's delete token (a raw id/uuid is refused) and `$selected` is `#[Locked]`, so the browser cannot write ids into it; bulk delete/retry act only on validated rows. Requires `vm-engine/synapse` ^3.6.

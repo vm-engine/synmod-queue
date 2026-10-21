@@ -8,7 +8,7 @@
     },
     "name": "Queue Management",
     "description": "Manage the application queue: retry/delete/flush failed jobs, view/delete/clear pending jobs (database driver), and trigger graceful worker restarts.",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "author": "Adods",
     "email": "theadods@gmail.com",
     "url_prefix": "queue",
