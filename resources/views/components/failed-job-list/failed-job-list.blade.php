@@ -1,5 +1,4 @@
 <div x-data="{ pageName: 'Failed Jobs', isHome: false }">
-    @include('synapps::components.layouts.partials.loader')
     @include('synapps::components.layouts.partials.breadcrumbs', ['breadcrumbs' => $this->breadcrumbs])
 
     <!-- Confirmation Dialog -->

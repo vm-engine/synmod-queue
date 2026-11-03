@@ -1,5 +1,4 @@
 <div x-data="{ pageName: 'Pending Jobs', isHome: false }">
-    @include('synapps::components.layouts.partials.loader')
     @include('synapps::components.layouts.partials.breadcrumbs', ['breadcrumbs' => $this->breadcrumbs])
 
     @if (!$this->isDatabaseDriver)
