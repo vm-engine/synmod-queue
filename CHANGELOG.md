@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-03
+
+### Fixed
+- The failed-job list, pending-job list and worker-control views no longer `@include('synapps::components.layouts.partials.loader')`. That partial has been dropped from Synapse's layout stubs, so on a host whose layout resources no longer ship it the include raised `View [synapps::components.layouts.partials.loader] not found` and took the whole page down.
+
 ## [0.3.0] - 2026-10-21
 
 ### Security
