@@ -89,7 +89,7 @@ new class extends Component
     {
         return Breadcrumbs::make(
             label: __('queue::labels.worker_control'),
-            icon: 'fa-solid fa-power-off',
+            icon: 'ph ph-power',
         );
     }
 

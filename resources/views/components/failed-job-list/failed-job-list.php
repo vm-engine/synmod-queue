@@ -244,7 +244,7 @@ new class extends Component
     {
         return Breadcrumbs::make(
             label: __('queue::labels.failed_jobs_list'),
-            icon: 'fa-solid fa-triangle-exclamation',
+            icon: 'ph ph-warning',
         );
     }
 

@@ -1,5 +1,5 @@
 <div x-data="{ pageName: 'Failed Jobs', isHome: false }">
-    @include('synapps::components.layouts.partials.breadcrumbs', ['breadcrumbs' => $this->breadcrumbs])
+    <x-synapse-breadcrumbs :breadcrumbs="$this->breadcrumbs" />
 
     <!-- Confirmation Dialog -->
     <x-synapse-confirm-dialog />
@@ -22,13 +22,13 @@
                         confirmText: $el.dataset.confirm,
                         cancelText: $el.dataset.cancel,
                         confirmColor: 'danger',
-                        icon: 'fa-solid fa-trash',
+                        icon: 'ph ph-trash',
                         wireMethod: 'flushAll',
                         wireParams: [],
                         wireComponent: $el.dataset.component
                     })"
                 >
-                    <span class="fa-solid fa-trash"></span>
+                    <span class="ph ph-trash"></span>
                     {{ __('queue::labels.flush_all') }}
                 </button>
                 @endcanAccess
@@ -59,7 +59,7 @@
                         confirmText: $el.dataset.confirm,
                         cancelText: $el.dataset.cancel,
                         confirmColor: 'primary',
-                        icon: 'fa-solid fa-rotate-right',
+                        icon: 'ph ph-arrow-clockwise',
                         wireMethod: 'retrySelected',
                         wireParams: [],
                         wireComponent: $el.dataset.component
@@ -84,7 +84,7 @@
                         confirmText: $el.dataset.confirm,
                         cancelText: $el.dataset.cancel,
                         confirmColor: 'danger',
-                        icon: 'fa-solid fa-trash',
+                        icon: 'ph ph-trash',
                         wireMethod: 'deleteSelected',
                         wireParams: [],
                         wireComponent: $el.dataset.component
@@ -134,7 +134,7 @@
                                             wire:click.prevent="sortData('queue')"
                                         >
                                             <span
-                                                class="fa fa-solid {{ $sort != 'queue' ? 'fa-sort' : ($sortDirection == 'asc' ? 'fa-sort-up' : 'fa-sort-down') }}"
+                                                class="ph {{ $sort != 'queue' ? 'ph-arrows-down-up' : ($sortDirection == 'asc' ? 'ph-caret-up' : 'ph-caret-down') }}"
                                             ></span>
                                         </a>
                                     </div>
@@ -147,7 +147,7 @@
                                             wire:click.prevent="sortData('failed_at')"
                                         >
                                             <span
-                                                class="fa fa-solid {{ $sort != 'failed_at' ? 'fa-sort' : ($sortDirection == 'asc' ? 'fa-sort-up' : 'fa-sort-down') }}"
+                                                class="ph {{ $sort != 'failed_at' ? 'ph-arrows-down-up' : ($sortDirection == 'asc' ? 'ph-caret-up' : 'ph-caret-down') }}"
                                             ></span>
                                         </a>
                                     </div>
@@ -212,13 +212,13 @@
                                                     confirmText: $el.dataset.confirm,
                                                     cancelText: $el.dataset.cancel,
                                                     confirmColor: 'primary',
-                                                    icon: 'fa-solid fa-rotate-right',
+                                                    icon: 'ph ph-arrow-clockwise',
                                                     wireMethod: 'retry',
                                                     wireParams: [$el.dataset.uuid],
                                                     wireComponent: $el.dataset.component
                                                 })"
                                             >
-                                                <span class="fa-solid fa-rotate-right"></span>
+                                                <span class="ph ph-arrow-clockwise"></span>
                                                 <span class="tooltip">{{ __('queue::labels.retry') }}</span>
                                             </button>
                                             @endcanAccess
@@ -238,13 +238,13 @@
                                                     confirmText: $el.dataset.confirm,
                                                     cancelText: $el.dataset.cancel,
                                                     confirmColor: 'danger',
-                                                    icon: 'fa-solid fa-trash',
+                                                    icon: 'ph ph-trash',
                                                     wireMethod: 'delete',
                                                     wireParams: [$el.dataset.token],
                                                     wireComponent: $el.dataset.component
                                                 })"
                                             >
-                                                <span class="fa-solid fa-trash"></span>
+                                                <span class="ph ph-trash"></span>
                                                 <span class="tooltip">{{ __('queue::labels.delete') }}</span>
                                             </button>
                                             @endcanAccess

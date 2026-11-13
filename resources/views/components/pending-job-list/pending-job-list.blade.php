@@ -1,5 +1,5 @@
 <div x-data="{ pageName: 'Pending Jobs', isHome: false }">
-    @include('synapps::components.layouts.partials.breadcrumbs', ['breadcrumbs' => $this->breadcrumbs])
+    <x-synapse-breadcrumbs :breadcrumbs="$this->breadcrumbs" />
 
     @if (!$this->isDatabaseDriver)
         <div class="space-y-5 sm:space-y-6">
@@ -33,13 +33,13 @@
                             confirmText: $el.dataset.confirm,
                             cancelText: $el.dataset.cancel,
                             confirmColor: 'danger',
-                            icon: 'fa-solid fa-broom',
+                            icon: 'ph ph-broom',
                             wireMethod: 'clearQueue',
                             wireParams: [$el.dataset.queue],
                             wireComponent: $el.dataset.component
                         })"
                     >
-                        <span class="fa-solid fa-broom"></span>
+                        <span class="ph ph-broom"></span>
                         {{ __('queue::labels.clear_queue') }}
                     </button>
                     @endcanAccess
@@ -82,7 +82,7 @@
                             confirmText: $el.dataset.confirm,
                             cancelText: $el.dataset.cancel,
                             confirmColor: 'danger',
-                            icon: 'fa-solid fa-trash',
+                            icon: 'ph ph-trash',
                             wireMethod: 'deleteSelected',
                             wireParams: [],
                             wireComponent: $el.dataset.component
@@ -132,7 +132,7 @@
                                                 wire:click.prevent="sortData('queue')"
                                             >
                                                 <span
-                                                    class="fa fa-solid {{ $sort != 'queue' ? 'fa-sort' : ($sortDirection == 'asc' ? 'fa-sort-up' : 'fa-sort-down') }}"
+                                                    class="ph {{ $sort != 'queue' ? 'ph-arrows-down-up' : ($sortDirection == 'asc' ? 'ph-caret-up' : 'ph-caret-down') }}"
                                                 ></span>
                                             </a>
                                         </div>
@@ -148,7 +148,7 @@
                                                 wire:click.prevent="sortData('available_at')"
                                             >
                                                 <span
-                                                    class="fa fa-solid {{ $sort != 'available_at' ? 'fa-sort' : ($sortDirection == 'asc' ? 'fa-sort-up' : 'fa-sort-down') }}"
+                                                    class="ph {{ $sort != 'available_at' ? 'ph-arrows-down-up' : ($sortDirection == 'asc' ? 'ph-caret-up' : 'ph-caret-down') }}"
                                                 ></span>
                                             </a>
                                         </div>
@@ -161,7 +161,7 @@
                                                 wire:click.prevent="sortData('created_at')"
                                             >
                                                 <span
-                                                    class="fa fa-solid {{ $sort != 'created_at' ? 'fa-sort' : ($sortDirection == 'asc' ? 'fa-sort-up' : 'fa-sort-down') }}"
+                                                    class="ph {{ $sort != 'created_at' ? 'ph-arrows-down-up' : ($sortDirection == 'asc' ? 'ph-caret-up' : 'ph-caret-down') }}"
                                                 ></span>
                                             </a>
                                         </div>
@@ -218,13 +218,13 @@
                                                         confirmText: $el.dataset.confirm,
                                                         cancelText: $el.dataset.cancel,
                                                         confirmColor: 'danger',
-                                                        icon: 'fa-solid fa-trash',
+                                                        icon: 'ph ph-trash',
                                                         wireMethod: 'delete',
                                                         wireParams: ['{{ $job->delete_token }}'],
                                                         wireComponent: $el.dataset.component
                                                     })"
                                                 >
-                                                    <span class="fa-solid fa-trash"></span>
+                                                    <span class="ph ph-trash"></span>
                                                     <span class="tooltip">{{ __('queue::labels.delete') }}</span>
                                                 </button>
                                                 @endcanAccess

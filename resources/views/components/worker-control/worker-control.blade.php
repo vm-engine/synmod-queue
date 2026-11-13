@@ -1,5 +1,5 @@
 <div x-data="{ pageName: 'Worker Control', isHome: false }">
-    @include('synapps::components.layouts.partials.breadcrumbs', ['breadcrumbs' => $this->breadcrumbs])
+    <x-synapse-breadcrumbs :breadcrumbs="$this->breadcrumbs" />
 
     <!-- Confirmation Dialog -->
     <x-synapse-confirm-dialog />
@@ -55,13 +55,13 @@
                             confirmText: $el.dataset.confirm,
                             cancelText: $el.dataset.cancel,
                             confirmColor: 'danger',
-                            icon: 'fa-solid fa-power-off',
+                            icon: 'ph ph-power',
                             wireMethod: 'restart',
                             wireParams: [],
                             wireComponent: $el.dataset.component
                         })"
                     >
-                        <span class="fa-solid fa-power-off"></span>
+                        <span class="ph ph-power"></span>
                         {{ __('queue::labels.restart_workers') }}
                     </button>
                 </div>

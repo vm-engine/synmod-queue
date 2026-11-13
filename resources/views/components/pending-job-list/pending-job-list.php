@@ -227,7 +227,7 @@ new class extends Component
     {
         return Breadcrumbs::make(
             label: __('queue::labels.pending_jobs_list'),
-            icon: 'fa-solid fa-hourglass-half',
+            icon: 'ph ph-hourglass-medium',
         );
     }
 
