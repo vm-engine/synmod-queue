@@ -8,7 +8,7 @@
     },
     "name": "Queue Management",
     "description": "Manage the application queue: retry/delete/flush failed jobs, view/delete/clear pending jobs (database driver), and trigger graceful worker restarts.",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "author": "Adods",
     "email": "theadods@gmail.com",
     "url_prefix": "queue",
@@ -27,7 +27,7 @@
             "name": "__queue::menu.be.parent",
             "position": 20,
             "class": "",
-            "icon": "fa-solid fa-list-check",
+            "icon": "ph ph-list-checks",
             "acl": "queue.any",
             "sub": {
                 "failed": {
@@ -35,7 +35,7 @@
                     "name": "__queue::menu.be.failed",
                     "route": "queue.failed",
                     "class": "",
-                    "icon": "fa-solid fa-triangle-exclamation",
+                    "icon": "ph ph-warning",
                     "acl": "queue.failed"
                 },
                 "pending": {
@@ -43,7 +43,7 @@
                     "name": "__queue::menu.be.pending",
                     "route": "queue.pending",
                     "class": "",
-                    "icon": "fa-solid fa-hourglass-half",
+                    "icon": "ph ph-hourglass-medium",
                     "acl": "queue.pending"
                 },
                 "worker": {
@@ -51,7 +51,7 @@
                     "name": "__queue::menu.be.worker",
                     "route": "queue.worker",
                     "class": "",
-                    "icon": "fa-solid fa-power-off",
+                    "icon": "ph ph-power",
                     "acl": "queue.worker"
                 }
             }
